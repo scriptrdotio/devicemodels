@@ -2,9 +2,9 @@ import("devicemodels.Location")
 
 /*
  *	Base class type that all devices should extend
- *	 A device properties can be set, it can be enabled, disabled, saved and deleted 
- *   If upon instantiation a device has been passed a DeviceRepositoryAdaptor, 
- *		the save/delete methods will invoke the Adaptors save and delete methods
+ *	A device properties can be set, it can be enabled, disabled, saved and deleted 
+ *  If the Device has been instantiated with a DeviceRepositoryAdaptor, 
+ *	the save/delete methods will invoke the DeviceRepositoryAdaptor' save and delete methods
  */
 var Device = Class({
   constructor: function(options) {
