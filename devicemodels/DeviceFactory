@@ -1,6 +1,9 @@
+/*
+ * A device factory knows how to load a device from the device repository and cast it into a Device class based on the model.cls attribute
+ */
 var DeviceFactory = Class({
-  
-  	constructor: function(options) {
+
+    constructor: function(options) {
       this.adaptor = options.adaptor
     },
       
@@ -8,7 +11,7 @@ var DeviceFactory = Class({
       var model
       
       try {
-		model = this.adaptor.load(id)
+	model = this.adaptor.load(id)
       } catch(err) {
         return null
       }
@@ -22,7 +25,7 @@ var DeviceFactory = Class({
       return device
     },
   
-  	new: function(cls, options) {
+    new: function(cls, options) {
       if (!options) options = {}
       if (!options.adaptor) options.adaptor = this.adaptor
       var device = new cls(options)
