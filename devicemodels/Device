@@ -1,10 +1,11 @@
 import("devicemodels.Location")
 
 /*
- *	Base class type that all devices should extend
- *	A device properties can be set, it can be enabled, disabled, saved and deleted 
- *  If the Device has been instantiated with a DeviceRepositoryAdaptor, 
- *	the save/delete methods will invoke the DeviceRepositoryAdaptor' save and delete methods
+ *	A Device represents the model of a remote device 
+ *  Extend the Device class to create different device type models such as: Vehicle, Thermostat, Car etc.
+ *	A Device has settable properties and can be enabled, disabled, placed online or offline, saved and deleted 
+ *  If upon instantiation, the device has been passed a DeviceRepositoryAdaptor, 
+ *	the save/delete methods will use the DeviceRepositoryAdaptor's save and delete methods to persist the device model
  */
 var Device = Class({
   constructor: function(options) {
