@@ -1,8 +1,8 @@
 import("devicemodels.DeviceFactory")
 
-/*	fetches a device model from the device repository and executes a method on it based on its class
- *		@params		map that should contain at least id and method 
- *
+/*	
+ * 	A Service class is typically used by a protocol adaptor (http, ws, mqtt) to interact with Device models
+ * 	The Service fetches a device model from the device repository based on @id and executes a @method passing @params		
  */
 
 var Service = Class({
