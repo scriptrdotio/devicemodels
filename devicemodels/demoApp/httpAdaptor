@@ -1,5 +1,5 @@
 /*
- *  serviceAdaptor provides an HTTP endpoint to the devicemodels.Service class, marshalling request parameters and returning response 
+ *  httpAdaptor provides an HTTP endpoint to the devicemodels.Service class, marshalling request parameters and returning response 
  *	it also injects a deviceRepositoryAdaptor that will provide the underlying repository services
  */
 require("/modules/framr/Framr").init(this, {classPath: "./modules/;./modules/devicemodels/demoApp/", quiet: true})
