@@ -170,7 +170,7 @@ function parseVehicleData(body) {
     }
     
     if (property) {
-      vehicle[property] = data[i].value;
+      vehicle[property] = isNaN(data[i].value) ? data[i].value : Number(data[i].value);
     }    
   }
 
