@@ -1,0 +1,40 @@
+/**
+ * Get device data
+ * @param {String} id: the identifier of the device to load
+ * @param {String} field: optional, if defined, script only returns the latest value of this field in a device
+ * @retun {Object} {field:value, etc.}
+ */ 
+
+try {
+ 
+  require("/modules/framr/Framr").init(this, {classPath: "modules/;"});
+  import("devicemodels.demoApp.model.Car");
+  import("agnes.VersionableDeviceRepositoryAdaptor");
+
+  var id = request.parameters.id;
+  if (!id){
+    return {};
+  }
+
+  var field = request.parameters.field;
+  if (!field){
+    field = request.body ? request.body.field : "";
+  }
+
+  var adaptor = new VersionableDeviceRepositoryAdaptor();
+  var deviceData = adaptor.load(id);
+  if (field) {
+
+    var output = {};
+    output[field] = deviceData[field];
+    return output;
+  }
+
+  return deviceData;
+}catch(exception){
+  
+  var log = require("log"); 
+  log.setLevel("info");
+  log.error("Exception occured while invoking devicemodels/api/getDeviceData:\n" + JSON.stringify(exception));
+  return {};
+}
