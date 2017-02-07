@@ -1,0 +1,2 @@
+// channel used to publish updates on vehicle data as received by the /etl/loader
+var channel = "reponseChannel";
