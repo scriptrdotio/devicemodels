@@ -14,7 +14,7 @@ import("devicemodels.demoApp.model.Car");
 import("agnes.VersionableDeviceRepositoryAdaptor");
 import("devicemodels.Location");
 
-const DEFAULT_UPDATE_CHANNEL = "updateChannel";
+const DEFAULT_UPDATE_CHANNEL = "reponseChannel";
 
 /**
  * Entry point
