@@ -1,0 +1,106 @@
+//check search criteria
+var params = {};
+
+if(request.body != null){
+	params = request.body;
+}else if(request.parameters.body){
+  params = request.parameters.body;
+}else {
+  params = request.parameters;
+}
+
+if(typeof params == 'string' && params != null){
+  try{
+    params = JSON.parse(params);   
+  }catch(e){
+    return "INVALID OR MISSING PARAMETER";
+  }
+}
+
+var criteria = params.criteria;
+
+//list all class models
+var models = require("./getModels").models;
+
+var structure = {};
+var attributes = [];
+//searching by className 
+if(models[criteria]){
+    
+  	//this class exists, return it along with the attributes under it
+  	var result = models[criteria];
+ 	attributes = getAttributes(models, criteria);
+  	structure = buildClassStrucuture(criteria, attributes);
+    var devices = getDeviceByClass(criteria);
+  	//modify the attributes to have the correct type
+  	for(var i = 0; i < attributes.length; i++){
+      	attributes[i].type = "instance-attribute"
+    }
+	//for each device, add the attributes
+  	for(var i = 0; i < devices.length; i++){
+      	structure.children.push(buildDeviceStructure(devices[i], criteria, attributes));
+    }
+}else{//or by device id
+  	var device = getDeviceById(criteria);	
+  	if(device){
+  		attributes = getAttributes(models, device.cls);
+  		var structure = buildClassStrucuture(device.cls, attributes);
+    	//modify the attributes to have the correct type
+  		for(var i = 0; i < attributes.length; i++){
+	      	attributes[i].type = "instance-attribute"
+    	}
+    	structure.children.push(buildDeviceStructure(device, device.cls, attributes));      
+    }
+}
+
+return structure;
+
+function getDeviceByClass(className){
+  	return require("device").query({query: 'cls = "' + criteria + '"'}).result.devices;
+}
+
+function getDeviceById(id){
+  	var dev = require("device").query({query: 'id = "' + id + '"', fields:'id, cls'}).result.devices;
+  	if(dev.length == 1){
+      	return dev[0];
+    }else{
+      	return null;
+    }
+}
+
+function buildClassStrucuture(className, attributes){
+  	return {
+      	label: className,
+      	className: className,
+      	type: "model",
+      	children: JSON.parse(JSON.stringify(attributes))//cheap clone
+    }
+}
+
+function buildDeviceStructure(device, className, attributes){
+  	return {
+          	id: device.id,
+      		label: device.id,
+          	className: className,
+          	type: "instance",
+          	clickable: true,
+          	children: attributes
+        }
+}
+
+function getAttributes(models, className){
+  	var attributes = [];
+  	if(models[className]){
+      	var atts = models[className].attributes;
+        for(var attribute in atts){
+          	var obj = {}
+            obj[attribute] = atts[attribute];
+          	obj.type = "class-attribute";
+            obj.clickable = true;
+          	obj.label = attribute;
+          	attributes.push(obj);
+        }
+        attributes = attributes.concat(getAttributes(models, models[className].ancestor));
+    }
+    return attributes;
+}

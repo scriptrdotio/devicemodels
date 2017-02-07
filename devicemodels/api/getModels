@@ -1,0 +1,167 @@
+/*
+"devicemodels.device"
+
+"devicemodels.vehicle"
+"devicemodels.car"
+
+"devicemodels.thermostat"
+"devicemodels.nest"
+
+"devicemodes.cradlepoint"
+*/
+var models = {
+    "devicemodels.device": {
+        "ancestor": null,
+        "attributes": {
+            "enabled": {
+                "type": "boolean",
+                "widget": {
+                    "type": "led"
+                }
+            },
+            "online": {
+                "type": "boolean",
+                "widget": {
+                    "type": "led"
+                }
+            },
+            "location": {
+                "type": "geolocation",
+                "widget": {
+                    "type": "map"
+                }
+            }
+        }
+    },
+    "devicemodels.vehicle": {
+        "ancestor": "devicemodels.device",
+        "attributes": {
+            "speed": {
+                "type": "numeric",
+                "widget": {
+                    "type": "speedometer"
+                }
+            },
+            "running": {
+                "type": "boolean",
+                "widget": {
+                    "type": "toggle"
+                }
+            },
+            "year": {
+                "type": "string",
+                "widget": {
+                    "type": "label"
+                }
+            },
+            "model": {
+                "type": "string",
+                "widget": {
+                    "type": "label"
+                }
+            },
+            "make": {
+                "type": "string",
+                "widget": {
+                    "type": "label"
+                }
+            },
+        },
+        "methods": {
+            "start": {
+                "params": {
+                    "p1": "string",
+                    "p2": "number"
+                }
+            },
+            "stop": {
+                "params": {
+                    "p1": "string",
+                    "p2": "number"
+                }
+            }
+        }
+    },
+    "model.Car": {
+        "ancestor": "devicemodels.vehicle",
+        "attributes": {
+            "color": {
+                "type": "numeric",
+                "widget": {
+                    "type": "picker"
+                }
+            },
+            "fuelLevel": {
+                "type": "numeric",
+                "widget": {
+                    "type": "gauge"
+                }
+            },
+            "ignitionStatus": {
+                "type": "string",
+                "widget": {
+                    "type": "label"
+                }
+            },
+            "vin": {
+                "type": "string",
+                "widget": {
+                    "type": "label"
+                }
+            },
+            "engineSpeed": {
+                "type": "numeric",
+                "widget": {
+                    "type": "speedometer"
+                }
+            },
+            "mileage": {
+                "type": "numeric",
+                "widget": {
+                    "type": "odometer"
+                }
+            },
+            "batteryVoltage": {
+                "type": "numeric",
+                "widget": {
+                    "type": "odometer"
+                }
+            },
+            "engineTemperature": {
+                "type": "numeric",
+                "widget": {
+                    "type": "gauge"
+                }
+            }
+        }
+    },
+    "devicemodels.thermostat": {
+        "ancestor": "devicemodels.device",
+        "attributes": {
+            "humidity": {
+                "type": "numeric",
+                "widget": {
+                    "type": "odometer"
+                }
+            },
+            "temperature": {
+                "type": "numeric",
+                "widget": {
+                    "type": "odometer"
+                }
+            }
+        }
+    },
+    "devicemodels.nest": {
+        "ancestor": "devicemodels.thermostat",
+        "attributes": {
+
+        }
+    },
+    "devicemodels.cradlepoint": {
+        "ancestor": "devicemodels.device",
+        "attributes": {
+
+        }
+    }
+}
