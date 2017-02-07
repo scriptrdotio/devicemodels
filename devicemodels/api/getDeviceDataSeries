@@ -6,21 +6,39 @@
  * @return {Object} [{field:value, etc.}, {field:value, etc.}, ...}
  */ 
 
+var config =  require("../config");
+var DEFAULT_CHANNEL = "responseChannel";
+
 try {
   
   require("/modules/framr/Framr").init(this, {classPath: "modules/;"});
   import("devicemodels.demoApp.model.Car");
   import("agnes.VersionableDeviceRepositoryAdaptor");
 
-  var id = request.parameters.id;
-  if (!id){
-    return {};
+   //check search criteria
+  var params = {};
+  if(request.body != null){
+    params = request.body;
+  }else if(request.parameters.body){
+    params = request.parameters.body;
+  }else {
+    params = request.parameters;
+  }
+  
+  if(typeof params == 'string' && params != null){
+    try{
+      params = JSON.parse(params);   
+    }catch(e){
+      return "INVALID OR MISSING PARAMETER";
+    }
   }
 
-  var field = request.parameters.field;
-  if (!field){
-    field = request.body ? request.body.field : "";
+  var id = params.id;
+  if (!id){
+    return "MISSING 'id' PARAMETER";;
   }
+
+  var field = params.field;
 
   var adaptor = new VersionableDeviceRepositoryAdaptor();
   var deviceDataSeries = adaptor.loadDataSeries(id);
@@ -34,8 +52,16 @@ try {
       output["time"] = deviceData.lastModifiedDate;
       output[field] = deviceData[field];
       dataSeries.push(output);
+      var dev = {
+        id: deviceData.id,
+        result: dataSeries
+      };
+      
+      publishUpdate(dev);
+      return dataSeries;
     }
     
+    publishUpdate(dataSeries);
     return dataSeries;
   }
  
@@ -49,10 +75,17 @@ try {
       
       if (["key", "lastModifiedBy", "creationDate", "cls", "versionNumber", "meta.types"].indexOf(key) < 0) {
         output[key] = deviceData[key];
+        
       }      
     }
     
-    dataSeries.push(output);
+    var dev = {
+        
+      id: deviceData.id,
+      result: output
+    };
+    
+    publishUpdate(dev);
   }
   
   return dataSeries;
@@ -62,4 +95,28 @@ try {
   log.setLevel("info");
   log.error("Exception occured while invoking devicemodels/api/getDeviceDataSeries:\n " + JSON.stringify(exception));
   return {};
+}
+
+function publishUpdate(device) {
+  
+  /**
+   * message = {id: deviceid.field, result: }
+   * gauge, speedo, odo: result = value
+   * charts (line, bar, ): result = [y, x, x]
+   */
+  
+  var channel = config && config.channel ? config.channel : DEFAULT_UPDATE_CHANNEL;
+  // var model = modelModule[device.cls];
+  for (var key in device) {
+    
+    // var widgetObj = model ? model.attributes[key] : null;
+    // var widgetType = widgetObj ? widgetObj.type : null;    
+    if (["cls", "id", "vin", "make", "model", "year"].indexOf(key) < 0) {
+      
+      var msg = {};
+      msg["id"] = ""+ device.id + "." + key;
+      msg["result"] = device[key]; 
+      publish(channel, JSON.stringify(msg));
+    }    
+  }  
 }

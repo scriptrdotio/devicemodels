@@ -7,14 +7,16 @@
  * If you do not have a Carvoyant stream, you can run the script and use the stub below to generate data.
  */
 
-var config = require("./config");
+  
+var modelModule = require("../../api/getModels");
+var config = require("../../config");
 
 require("/modules/framr/Framr").init(this, {classPath: "modules/;"});
 import("devicemodels.demoApp.model.Car");
 import("agnes.VersionableDeviceRepositoryAdaptor");
 import("devicemodels.Location");
 
-const DEFAULT_UPDATE_CHANNEL = "reponseChannel";
+const DEFAULT_UPDATE_CHANNEL = "responseChannel";
 
 /**
  * Entry point
@@ -128,14 +130,23 @@ try {
  */
 function publishUpdate(device) {
   
+  /**
+   * message = {id: deviceid.field, result: }
+   * gauge, speedo, odo: result = value
+   * charts (line, bar, ): result = [y, x, x]
+   */
+  
   var channel = config && config.channel ? config.channel : DEFAULT_UPDATE_CHANNEL;
+  // var model = modelModule[device.cls];
   for (var key in device) {
     
+    // var widgetObj = model ? model.attributes[key] : null;
+    // var widgetType = widgetObj ? widgetObj.type : null;    
     if (["cls", "id", "vin", "make", "model", "year"].indexOf(key) < 0) {
       
       var msg = {};
-      var msgTag = ""+ device.id + "." + key;
-      msg[msgTag] = device[key];
+      msg["id"] = ""+ device.id + "." + key;
+      msg["result"] = device[key]; 
       publish(channel, JSON.stringify(msg));
     }    
   }  
