@@ -67,7 +67,7 @@ try {
     
     dev["result"] = dataSeries;    
     publishUpdate(dev);
-    return dev;
+    return dataSeries;
   }
  
   /*

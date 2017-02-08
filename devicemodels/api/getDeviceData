@@ -53,7 +53,7 @@ try {
     
     dev[field] = deviceData[field];
     publishUpdate(dev);
-    return output;
+    return output[field];
   }else {
     
     publishUpdate(deviceData);
