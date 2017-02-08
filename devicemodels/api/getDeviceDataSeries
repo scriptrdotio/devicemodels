@@ -11,7 +11,7 @@ var DEFAULT_CHANNEL = "responseChannel";
 
 try {
   
-  require("/framr/Framr").init(this, {classPath: "modules/;"});
+  require("/modules/framr/Framr").init(this, {classPath: "modules/;"});
   import("devicemodels.demoApp.model.Car");
   import("agnes.VersionableDeviceRepositoryAdaptor");
 
