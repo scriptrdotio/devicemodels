@@ -88,6 +88,22 @@ var Device = Class({
   },
   
   /**
+   * This method assumes that the adapter is capable of handling historical data.
+   * @method query
+   * @param {String} field: optional, when specified only return historical data for this field
+   * @param {Number} page: optional, page number if more than max docs per page returned
+   * @param {Date} date: optional
+   */
+  query: function(field, page, date) {
+    
+    if (this.adaptor && this.adaptor.loadDataSeries) {     
+      return this.adaptor.loadDataSeries(this.metadata.id, field, page, date);
+    }
+    
+    return [];
+  },
+  
+  /**
    * @params {String} eventType: the name of a property to monitor 
    * @params {Function} listener: a reference to a function that will be invoked whenever the value of the property is updated
    * @params {String} expression: (optional) if defined, the listener is invoked only if the expression is true. Expression is relative to the new
