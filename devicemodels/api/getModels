@@ -16,19 +16,34 @@ var models = {
             "enabled": {
                 "type": "boolean",
                 "widget": {
-                    "type": "led"
+                    "type": "led",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "enabled"},
+      				"msg-tag": "{[{vm.id}]}.enabled",
+                    "boxLabel": "enabled - {[{vm.id}]}"
                 }
             },
             "online": {
                 "type": "boolean",
                 "widget": {
-                    "type": "led"
+                    "type": "led",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "online"},
+      				"msg-tag": "{[{vm.id}]}.online",
+                    "boxLabel": "online - {[{vm.id}]}"
                 }
             },
             "location": {
                 "type": "geolocation",
                 "widget": {
-                    "type": "map"
+                    "type": "map",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "location"},
+      				"msg-tag": "{[{vm.id}]}.location",
+                    "boxLabel": "location - {[{vm.id}]}"
                 }
             }
         }
@@ -39,31 +54,56 @@ var models = {
             "speed": {
                 "type": "numeric",
                 "widget": {
-                    "type": "speedometer"
+                    "type": "speedometer",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "speed"},
+      				"msg-tag": "{[{vm.id}]}.speed",
+                    "boxLabel": "speed - {[{vm.id}]}"
                 }
             },
             "running": {
                 "type": "boolean",
                 "widget": {
-                    "type": "toggle"
+                    "type": "toggle",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "running"},
+      				"msg-tag": "{[{vm.id}]}.running",
+                    "boxLabel": "running - {[{vm.id}]}"
                 }
             },
             "year": {
                 "type": "string",
                 "widget": {
-                    "type": "label"
+                    "type": "label",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "year"},
+      				"msg-tag": "{[{vm.id}]}.year",
+                    "boxLabel": "year - {[{vm.id}]}"
                 }
             },
             "model": {
                 "type": "string",
                 "widget": {
-                    "type": "label"
+                    "type": "label",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "model"},
+      				"msg-tag": "{[{vm.id}]}.model",
+                    "boxLabel": "model - {[{vm.id}]}"
                 }
             },
             "make": {
                 "type": "string",
                 "widget": {
-                    "type": "label"
+                    "type": "label",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "make"},
+      				"msg-tag": "{[{vm.id}]}.make",
+                    "boxLabel": "make - {[{vm.id}]}"
                 }
             },
         },
@@ -85,52 +125,173 @@ var models = {
     "model.Car": {
         "ancestor": "devicemodels.vehicle",
         "attributes": {
-            "color": {
+          /**"color": {
                 "type": "numeric",
                 "widget": {
-                    "type": "picker"
+                    "type": "picker",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "color"},
+      				"msg-tag": "{[{vm.id}]}.color",
+                    "boxLabel": "color - {[{vm.id}]}"
                 }
-            },
+            },**/
             "fuelLevel": {
                 "type": "numeric",
                 "widget": {
-                    "type": "gauge"
+                    "type": "gauge",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "fuelLevel"},
+      				"msg-tag": "{[{vm.id}]}.fuelLevel",
+                    "boxLabel": "fuelLevel - {[{vm.id}]}",
+                  	"label": "%",
+                  	"custom-sectors": "[{color : '#aa0000', lo : 0, hi : 24}, { color : '#0000aa', lo : 25, hi : 100 }]"
                 }
             },
-            "ignitionStatus": {
+          "fuelLevelHistorical": {
+                "type": "numeric",
+                "widget": {
+                    "type": "line",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "fuelLevel", "method": "query"},
+      				"msg-tag": "{[{vm.id}]}.fuelLevelHistorical",
+                    "xkey": "time",
+            		"ykeys": "[\"fuelLevel\"]",
+            		"labels": "[\"Fuel Level\"]",
+                    "boxLabel": "fuelLevelHistorical - {[{vm.id}]}"
+                }
+            },
+           "ignitionStatus": {
                 "type": "string",
                 "widget": {
-                    "type": "label"
+                    "type": "label",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "ignitionStatus"},
+      				"msg-tag": "{[{vm.id}]}.ignitionStatus",
+                    "boxLabel": "ignitionStatus - {[{vm.id}]}",
                 }
             },
             "vin": {
                 "type": "string",
                 "widget": {
-                    "type": "label"
+                    "type": "label",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "vin"},
+      				"msg-tag": "{[{vm.id}]}.vin",
+                    "boxLabel": "vin - {[{vm.id}]}"
                 }
             },
             "engineSpeed": {
                 "type": "numeric",
                 "widget": {
-                    "type": "speedometer"
+                    "type": "speedometer",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "engineSpeed"},
+      				"msg-tag": "{[{vm.id}]}.engineSpeed",
+                    "boxLabel": "engineSpeed - {[{vm.id}]}",
+                  	"gauge-units": "RPM",
+                  	"min-val": 0,
+                  	"max-val": 10000,
+                  	"tick-space-maj-val": 1000,
+                  	"tick-space-min-val": 500
+                }
+            },
+            "engineSpeedHistorical": {
+                "type": "numeric",
+                "widget": {
+                    "type": "area",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "engineSpeed", "method": "query"},
+      				"msg-tag": "{[{vm.id}]}.engineSpeedHistorical",
+                    "xkey": "time",
+            		"ykeys": "[\"engineSpeed\"]",
+            		"labels": "[\"Engine Speed\"]",
+                    "boxLabel": "engineSpeedHistorical - {[{vm.id}]}"
                 }
             },
             "mileage": {
                 "type": "numeric",
                 "widget": {
-                    "type": "odometer"
+                    "type": "odometer",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                     "default-api-params": {"field": "mileage"},
+      				 "msg-tag": "{[{vm.id}]}.mileage",
+                     "boxLabel": "mileage - {[{vm.id}]}"
+                }
+            },
+            "mileageHistorical": {
+                "type": "numeric",
+                "widget": {
+                    "type": "line",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "mileage", "method": "query"},
+      				"msg-tag": "{[{vm.id}]}.mileageHistorical",
+                    "xkey": "time",
+            		"ykeys": "[\"mileage\"]",
+            		"labels": "[\"Mileage\"]",
+                    "boxLabel": "mileageHistorical - {[{vm.id}]}"
                 }
             },
             "batteryVoltage": {
                 "type": "numeric",
                 "widget": {
-                    "type": "odometer"
+                    "type": "odometer",
+                     "api": "modules/devicemodels/api/getDeviceData",
+      			     "api-params-name": ["id"],
+                     "default-api-params": {"field": "batteryVoltage"},
+      				 "msg-tag": "{[{vm.id}]}.batteryVoltage",
+                     "boxLabel": "batteryVoltage - {[{vm.id}]}"
+                }
+            },
+            "batteryVoltageHistorical": {
+                "type": "numeric",
+                "widget": {
+                    "type": "bar",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "batteryVoltage", "method": "query"},
+      				"msg-tag": "{[{vm.id}]}.batteryVoltageHistorical",
+                    "xkey": "time",
+            		"ykeys": "[\"batteryVoltage\"]",
+            		"labels": "[\"Battery voltage\"]",
+                    "boxLabel": "batteryVoltageHistorical - {[{vm.id}]}"
                 }
             },
             "engineTemperature": {
                 "type": "numeric",
                 "widget": {
-                    "type": "gauge"
+                    "type": "gauge",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "engineTemperature"},
+      				"msg-tag": "{[{vm.id}]}.engineTemperature",
+                    "boxLabel": "engineTemperature - {[{vm.id}]}",
+                  	"label": "°C",
+                  	"min": 50,
+                  	"max": 130,
+                  	"custom-sectors": "[{color : '#0000aa', lo : 0, hi : 79}, { color : '#00aa00', lo : 80, hi : 93 }, { color : '#ff0000', lo : 94 , hi: 130}]"
+                }
+            },
+            "engineTemperatureHistorical": {
+                "type": "numeric",
+                "widget": {
+                    "type": "area",
+                    "api": "modules/devicemodels/api/getDeviceData",
+      			    "api-params-name": ["id"],
+                    "default-api-params": {"field": "engineTemperature", "method": "query"},
+      				"msg-tag": "{[{vm.id}]}.engineTemperatureHistorical",
+                    "xkey": "time",
+            		"ykeys": "[\"engineTemperature\"]",
+            		"labels": "[\"Engine temperature\"]",
+                    "boxLabel": "engineTemperatureHistorical - {[{vm.id}]}"
                 }
             }
         }

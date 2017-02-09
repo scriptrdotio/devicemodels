@@ -23,6 +23,8 @@ var criteria = params.criteria;
 var models = require("./getModels").models;
 
 var structure = {};
+var resultArray = [];
+
 var attributes = [];
 //searching by className 
 if(models[criteria]){
@@ -30,37 +32,30 @@ if(models[criteria]){
   	//this class exists, return it along with the attributes under it
   	var result = models[criteria];
  	attributes = getAttributes(models, criteria);
-  	structure = buildClassStrucuture(criteria, attributes);
+  	resultArray.push(buildClassStrucuture(criteria, attributes));
     var devices = getDeviceByClass(criteria);
-  	//modify the attributes to have the correct type
-  	for(var i = 0; i < attributes.length; i++){
-      	attributes[i].type = "instance-attribute"
-    }
 	//for each device, add the attributes
   	for(var i = 0; i < devices.length; i++){
-      	structure.children.push(buildDeviceStructure(devices[i], criteria, attributes));
+      	resultArray.push(buildDeviceStructure(devices[i], criteria, attributes));
     }
 }else{//or by device id
   	var device = getDeviceById(criteria);	
   	if(device){
   		attributes = getAttributes(models, device.cls);
-  		var structure = buildClassStrucuture(device.cls, attributes);
+  		resultArray.push(buildClassStrucuture(device.cls, attributes));
     	//modify the attributes to have the correct type
-  		for(var i = 0; i < attributes.length; i++){
-	      	attributes[i].type = "instance-attribute"
-    	}
-    	structure.children.push(buildDeviceStructure(device, device.cls, attributes));      
+    	resultArray.push(buildDeviceStructure(device, device.cls, attributes));      
     }
 }
 
-return structure;
+return resultArray;
 
 function getDeviceByClass(className){
-  	return require("device").query({query: 'cls = "' + criteria + '"'}).result.devices;
+  	return require("device").query({query: 'cls = "' + criteria + '"', fields: 'id, cls, make, model'}).result.devices;
 }
 
 function getDeviceById(id){
-  	var dev = require("device").query({query: 'id = "' + id + '"', fields:'id, cls'}).result.devices;
+  	var dev = require("device").query({query: 'id = "' + id + '"', fields:'id, cls, make, model'}).result.devices;
   	if(dev.length == 1){
       	return dev[0];
     }else{
@@ -78,13 +73,35 @@ function buildClassStrucuture(className, attributes){
 }
 
 function buildDeviceStructure(device, className, attributes){
+    var deviceLabel = (device.make?device.make:"N/A") + " "+ (device.model?device.model:"N/A") + ": " + device.id;
+  	//clone in order to modify and return the object from getModels
+  	var clone = JSON.parse(JSON.stringify(attributes));
+  	//this is an ugly structure, use the [key] to figure out the name under which the attributes are
+    for(var i = 0; i < attributes.length; i++){
+        attributes[i].type = "instance-attribute";
+		var attribute = clone[i][clone[i]["key"]];
+      	//if(attribute["widget"] && attribute["widget"]["msg-tag"]){
+        attribute["widget"]["msg-tag"] = device.id + "." + clone[i]["key"];
+        //}
+       if(attribute["widget"] && attribute["widget"]["default-api-params"]){
+          attribute["widget"]["default-api-params"]["id"] = device.id;
+        } else {
+           attribute["widget"]["default-api-params"] = {"id": device.id}
+        }
+        if(attribute["widget"] && attribute["widget"]["api-params-name"]){
+        	attribute["widget"]["api-params-name"].splice( attribute["widget"]["api-params-name"].indexOf("id"), 1);
+        	attribute["widget"]["api-params-name"].splice( attribute["widget"]["api-params-name"].indexOf("field"), 1);
+        }
+      	attribute["widget"]["boxLabel"] = deviceLabel + " - " +  clone[i]["key"];
+    }
+  	
   	return {
           	id: device.id,
-      		label: device.id,
+      		label: deviceLabel,
           	className: className,
           	type: "instance",
           	clickable: true,
-          	children: attributes
+          	children: clone
         }
 }
 
@@ -95,6 +112,7 @@ function getAttributes(models, className){
         for(var attribute in atts){
           	var obj = {}
             obj[attribute] = atts[attribute];
+          	obj.key = attribute;
           	obj.type = "class-attribute";
             obj.clickable = true;
           	obj.label = attribute;

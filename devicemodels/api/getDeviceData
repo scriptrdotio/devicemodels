@@ -10,8 +10,8 @@ var DEFAULT_CHANNEL = "responseChannel";
 
 try {
  
-  require("/modules/framr/Framr").init(this, {classPath: "modules/;"});
-  import("devicemodels.demoApp.model.Car");
+  require("/modules/framr/Framr").init(this, {classPath: "modules/;modules/devicemodels/demoApp/;"});
+  import("devicemodels.DeviceFactory");
   import("agnes.VersionableDeviceRepositoryAdaptor");
 
   //check search criteria
@@ -38,12 +38,25 @@ try {
   }
 
   var field = params.field;
-
-  var adaptor = new VersionableDeviceRepositoryAdaptor();
-  var deviceData = adaptor.load(id);
+  if (!field){
+    return "MISSING 'field' PARAMETER";;
+  }
   
-  if (field) {
+  var method = params.method;
+  
+  /*
+   * load device from id
+   */
+  var adaptor = new VersionableDeviceRepositoryAdaptor();
+  var deviceFactory = new devicemodels.DeviceFactory({adaptor: adaptor});
+  var device = deviceFactory.load(id); 
+  
+  /*
+   * if no method specified, this is a simple get
+   */
+  if (!method) {
 
+    var deviceData = device.metadata;
     var output = {};
     output[field] = deviceData[field];
     var dev = {
@@ -54,12 +67,29 @@ try {
     dev[field] = deviceData[field];
     publishUpdate(dev);
     return output[field];
-  }else {
-    
-    publishUpdate(deviceData);
-    return deviceData;
   }
   
+  /*
+   * if field + method, searching for data series
+   */
+  var deviceDataSeries = device[method](field);
+  var dataSeries = [];
+  var dev = {
+    id: id
+  };
+
+  for (var i = 0; deviceDataSeries && i < deviceDataSeries.length; i++) {
+
+    var deviceData = deviceDataSeries[i]; 
+    var output = {};
+    output["time"] = deviceData.lastModifiedDate;
+    output[field] = deviceData[field];
+    dataSeries.push(output);        
+  }
+
+  dev[field] = dataSeries; 
+  publishUpdate(dev, "Historical");
+  return dataSeries;
  
 }catch(exception){
   
@@ -69,7 +99,7 @@ try {
   return {};
 }
 
-function publishUpdate(device) {
+function publishUpdate(device, postfix) {
   
   /**
    * message = {id: deviceid.field, result: }
@@ -86,7 +116,7 @@ function publishUpdate(device) {
     if (["cls", "id", "vin", "make", "model", "year"].indexOf(key) < 0) {
       
       var msg = {};
-      msg["id"] = ""+ device.id + "." + key;
+      msg["id"] = ""+ device.id + "." + key + (postfix ? postfix : "");
       msg["result"] = device[key]; 
       publish(channel, JSON.stringify(msg));
     }    
