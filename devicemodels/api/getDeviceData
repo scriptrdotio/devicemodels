@@ -1,8 +1,16 @@
 /**
- * Get device data
+ * This API is used by the dashboard builder in order to dynamically retrieve the data that pertains to a property of given device
+ * in order to display it in some chart. It is possible to retrive the latest value of a given field or historical data (data series) 
+ * of the given field, if available. The current implementation uses agnes.VersionableDeviceRepositoryAdaptor to load historical
+ * data. which means data has been persisted into scriptr.io's storage. You can replace the adapter with you own implementation.
+ * The method returns data and also publishes it on the dedicated channel ("responseChannel" by default) to which widgets in the 
+ * dashboard are automatically subscribed.
  * @param {String} id: the identifier of the device to load
- * @param {String} field: optional, if defined, script only returns the latest value of this field in a device
- * @retun {Object} {field:value, etc.}
+ * @param {String} field: specifies what property of the device we need to read data from
+ * @param {String} method: optional, only needed when requesting data series. 
+ * If defined, "method" specifies what method of the device's class should be invoked to obtain the data series. You can use "query"
+ * which is a built-in method of the Device class.
+ * @retun {Object} value if no method specified or [{time:ios_string_date, field_name: value}, ...] othewise 
  */ 
 
 var config =  require("../config");
