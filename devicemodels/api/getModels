@@ -10,11 +10,17 @@
 "devicemodes.cradlepoint"
 */
 var models = {
+   icons: {
+   "deviceModel": "",
+   "instanceModel": ""
+ },
+ models:{
     "devicemodels.device": {
         "ancestor": null,
         "attributes": {
             "enabled": {
                 "type": "boolean",
+                "imgSrc": "",
                 "widget": {
                     "type": "led",
                     "api": "modules/devicemodels/api/getDeviceData",
@@ -195,8 +201,8 @@ var models = {
       				"msg-tag": "{[{vm.id}]}.engineSpeed",
                     "boxLabel": "engineSpeed - {[{vm.id}]}",
                   	"gauge-units": "RPM",
-                  	"min-val": 0,
-                  	"max-val": 10000,
+                  	"min-value": 0,
+                  	"max-value": 10000,
                   	"tick-space-maj-val": 1000,
                   	"tick-space-min-val": 500
                 }
@@ -325,4 +331,5 @@ var models = {
 
         }
     }
+ }
 }
