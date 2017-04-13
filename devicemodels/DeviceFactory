@@ -6,23 +6,46 @@ var DeviceFactory = Class({
     constructor: function(options) {
       this.adaptor = options.adaptor
     },
-      
-    load: function(id) {
+  
+    getInstance: function(params) {
+      if(!params){
+        return null;
+      }
       var model
+      var deviceClass;
+      var device;
       
       try {
-	model = this.adaptor.load(id)
+        model = this.adaptor.load(params.id);
+        if(model)
+        	deviceClass = import(model.cls)
       } catch(err) {
-        return null
+        if(!params.autoCreate)
+        	return null
+      }
+      
+      // Load device class dynamically
+      if(!model && params.autoCreate){
+        if(!params.cls){
+          return null;
+        }
+        
+		deviceClass = import(params.cls);
+        model = {
+          "cls": params.cls
+        }
+      }
+      
+      if(deviceClass){
+        // Instantiate a new device of deviceClass
+        device = new deviceClass({adaptor: this.adaptor, model: model})
       }
 
-      // Load device class dynamically
-      var deviceClass = import(model.cls)
-
-      // Instantiate a new device of deviceClass
-      var device = new deviceClass({adaptor: this.adaptor, model: model})
-
       return device
+    },
+  
+    load: function(id) {
+      this.getInstance({ "id" : id});
     },
   
     new: function(cls, options) {

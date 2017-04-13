@@ -6,17 +6,28 @@ import("devicemodels.DeviceFactory")
  */
 
 var Service = Class({
-  constructor: function(adaptor) {
+  constructor: function(adaptor, config) {
     this.adaptor = adaptor
-    this.factory = new devicemodels.DeviceFactory({adaptor: adaptor})
+    this.factory = new devicemodels.DeviceFactory({adaptor: adaptor});
+  	this.config = config ? config : require('./config').getConfig();
   },
   
-  execute: function(id, method, params) {
+  execute: function(deviceParams, method, params) {
 	// fetch deviceModel by DeviceID from device Database, load will pick ID from request.
   	// This is important to retrieve the device classname and instantiate the proper device class for the model 
-    
+    var device;
     try {
-      var device = this.factory.load(id)  
+      if(typeof(deviceParams) == "string"){
+         var id = deviceParams;
+         deviceParams = { 
+           "id" : id
+         }
+      }
+       
+      deviceParams['autoCreate'] = this.config.autoCreate;
+      
+      device = this.factory.getInstance(deviceParams)  
+      // device = this.factory.load(id)  
 
       // If device model exists
       if (device) {
