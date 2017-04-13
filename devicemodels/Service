@@ -33,7 +33,10 @@ var Service = Class({
       if (device) {
         // invoke desired method
         device[method](params)
-
+		// until further requirements we consider that we need to save the device after every method execution.
+        if(method == "set")
+       		return device.save();
+        
         return device
       }
     } catch(e) {

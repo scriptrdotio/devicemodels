@@ -32,7 +32,9 @@ var DeviceFactory = Class({
         
 		deviceClass = import(params.cls);
         model = {
-          "cls": params.cls
+          "cls": params.cls,
+          "id": params.id,
+          "name":params.name ? params.name : params.id
         }
       }
       
