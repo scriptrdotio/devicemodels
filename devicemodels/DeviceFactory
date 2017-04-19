@@ -47,7 +47,7 @@ var DeviceFactory = Class({
     },
   
     load: function(id) {
-      this.getInstance({ "id" : id});
+      return this.getInstance({ "id" : id});
     },
   
     new: function(cls, options) {
