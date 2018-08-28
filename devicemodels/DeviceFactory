@@ -1,5 +1,7 @@
 /*
  * A device factory knows how to load a device from the device repository and cast it into a Device class based on the model.cls attribute
+ * if not existed it will init a new devie using the model.cls class
+ * if model.cls is not device it will init a new devcie using devicemodels.Device
  */
 var DeviceFactory = Class({
 
@@ -7,41 +9,49 @@ var DeviceFactory = Class({
       this.adaptor = options.adaptor
     },
   
-    getInstance: function(params) {
+    getInstance: function(params,extraParams) {
       if(!params){
         return null;
       }
       var model
       var deviceClass;
       var device;
-      
       try {
         model = this.adaptor.load(params.id);
         if(model)
         	deviceClass = import(model.cls)
       } catch(err) {
+        
         if(!params.autoCreate)
         	return null
       }
       
       // Load device class dynamically
-      if(!model && params.autoCreate){
+      
+      if((!model) && params.autoCreate){
         if(!params.cls){
+           
           return null;
         }
-        
+        if(!params.cls){
+            params.cls="devicemodels.Device";
+        }
 		deviceClass = import(params.cls);
         model = {
           "cls": params.cls,
           "id": params.id,
           "name":params.name ? params.name : params.id
         }
+        for (var k in extraParams) {
+        	model[k]=extraParams[k];
+    	}
       }
       
       if(deviceClass){
         // Instantiate a new device of deviceClass
         device = new deviceClass({adaptor: this.adaptor, model: model})
       }
+        
 
       return device
     },

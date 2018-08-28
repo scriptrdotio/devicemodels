@@ -81,6 +81,7 @@ var Device = Class({
     if (this.adaptor) return this.adaptor.save(this); 
     else logger.warn("Device.save - ["+this.metadata.id+"] hasn't been instantiated with a DeviceRepositoryAdaptor")
   },
+
   
   delete: function() {
     if (this.adaptor) return this.adaptor.delete(this)

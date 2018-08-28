@@ -26,7 +26,7 @@ var Service = Class({
        
       deviceParams['autoCreate'] = this.config.autoCreate;
       
-      device = this.factory.getInstance(deviceParams)  
+      device = this.factory.getInstance(deviceParams,params)  ;
       // device = this.factory.load(id)  
 
       // If device model exists

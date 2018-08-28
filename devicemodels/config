@@ -1,6 +1,6 @@
 // channel used to publish updates on vehicle data as received by the /etl/loader
 var channel = "responseChannel";
-var autoCreate = false;
+var autoCreate = true;
 
 function getConfig(){
   return {
